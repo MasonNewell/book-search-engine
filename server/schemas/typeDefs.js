@@ -25,7 +25,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    books: [Book]
     me: [User]
   }
 `;
