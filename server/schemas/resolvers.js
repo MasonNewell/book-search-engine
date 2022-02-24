@@ -1,4 +1,4 @@
-const { Book, User } = require("../models");
+const { User } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -19,6 +19,7 @@ const resolvers = {
 
       return { token, user };
     },
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -30,6 +31,18 @@ const resolvers = {
       }
       const token = signToken(user);
       return { token, user };
+    },
+
+    saveBook: async (parent, { input }, context) => {
+      if (context.user) {
+        const user = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { savedBook: input } },
+          { new: true, runValidators: true }
+        );
+        return user;
+      }
+      throw new AuthenticationError("Error at resolvers saveBook");
     },
   },
 };
