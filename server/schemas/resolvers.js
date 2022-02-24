@@ -4,8 +4,14 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    me: async () => {
-      return User.find();
+    user: async (parent, { profileId }) => {
+      return Profile.findOne({ _id: profileId });
+    },
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return Profile.findOne({ _id: context.user._id });
+      }
+      throw new AuthenticationError("You need to be logged in!");
     },
   },
 
@@ -13,6 +19,7 @@ const resolvers = {
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
+
       return { token, user };
     },
   },
