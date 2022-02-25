@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Jumbotron, Container, CardColumns, Card, Button } from "react-bootstrap";
 
 import Auth from "../utils/auth";
@@ -42,8 +42,10 @@ const SavedBooks = () => {
     return <h2>LOADING...</h2>;
   }
 
-  const savedBookIds = userData.savedBooks.map((book) => book.bookId);
-  saveBookIds(saveBookIds);
+  const savedBookIds = userData.savedBooks.map((book) => {
+    console.log(book);
+  });
+  // saveBookIds(saveBookIds);
 
   return (
     <>
